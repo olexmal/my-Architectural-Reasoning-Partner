@@ -1,0 +1,22 @@
+---
+description: Trigger this rule to create a project based on a markdown file and user interview
+globs: **/*.md
+alwaysApply: false
+---
+
+# Skill: File Orchestrator
+
+When the user says "Execute Skill" or "@creator-skill", follow this logic:
+
+## Phase 1: Context Analysis
+1. Read the provided Markdown file (e.g., the one currently open or mentioned).
+2. Summarize the core intent of that file back to the user.
+
+## Phase 2: Interactive Interview
+1. Ask the user 2-3 targeted questions to fill in gaps not found in the Markdown.
+2. **Wait for user response after each question.** 3. Do not proceed to file generation until the "Interview Phase" is complete.
+
+## Phase 3: Generation
+1. Combine the data from the Markdown file AND the user's answers.
+2. Create the necessary project files (e.g., `main.py`, `config.json`, etc.).
+3. Update the original Markdown with a "Processed" timestamp.

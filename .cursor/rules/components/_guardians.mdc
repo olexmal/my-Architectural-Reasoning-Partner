@@ -1,0 +1,104 @@
+# Guardians Registry
+
+> This file tracks all component guardians in the Architectural Reasoning Partner.
+> Automatically updated when components are added via `/add-component`.
+
+---
+
+## Overview
+
+**Guardians** are the people responsible for each component:
+
+- **Main Guardians (1+):** Primary owners and maintainers. At least one required per component. Contact for architectural decisions, major changes, and approvals.
+
+- **Secondary Guardians (0+):** Backup contacts and regular contributors. Optional. Contact when main guardians are unavailable or for smaller changes.
+
+---
+
+## Guardians by Component
+
+*(Components are added automatically when registered)*
+
+| Component | Main Guardian(s) | Secondary Guardian(s) |
+|-----------|------------------|----------------------|
+| *(none registered yet)* | - | - |
+
+---
+
+## Detailed Guardian Information
+
+### *(Example - will be replaced when components are added)*
+
+```
+### component-name
+
+**Main Guardians:**
+| Name | Email | Role |
+|------|-------|------|
+| First Last | email@company.com | Tech Lead |
+
+**Secondary Guardians:**
+| Name | Email | Role |
+|------|-------|------|
+| First Last | email@company.com | Developer |
+```
+
+---
+
+## Guardians by Person
+
+This section helps find all components a person is responsible for.
+
+### *(People are added automatically when components are registered)*
+
+```
+### Person Name (email@company.com)
+
+**Main Guardian for:**
+- component-1 (Role)
+- component-2 (Role)
+
+**Secondary Guardian for:**
+- component-3 (Role)
+```
+
+---
+
+## Guardian Responsibilities
+
+### Main Guardians Should:
+1. Review and approve architectural changes to the component
+2. Be notified of all HLD changes affecting the component
+3. Maintain component documentation and descriptor
+4. Coordinate with dependent component guardians
+5. Respond to questions about component capabilities
+
+### Secondary Guardians Should:
+1. Be available as backup when main guardians are unavailable
+2. Stay informed about component changes
+3. Assist with code reviews and implementation
+4. Escalate to main guardians for major decisions
+
+---
+
+## Updating Guardian Information
+
+To update guardians for an existing component:
+
+1. Edit the component's rule file: `.cursor/rules/components/{component-name}.mdc`
+2. Update the Guardians section
+3. Update this registry file
+4. Notify affected guardians of the change
+
+---
+
+## Statistics
+
+- **Total Guardians:** 0
+- **Main Guardians:** 0
+- **Secondary Guardians:** 0
+- **Components with Guardians:** 0
+
+---
+
+*Last updated: (not yet updated)*

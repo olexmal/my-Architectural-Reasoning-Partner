@@ -1,0 +1,141 @@
+# COMPONENT: {component-name}
+
+> **Auto-generated from component descriptor**
+> Use `/add-component` to create component rules from descriptors.
+
+---
+
+## Overview
+
+| Property | Value |
+|----------|-------|
+| **Name** | {component.name} |
+| **Description** | {component.description} |
+| **Domain** | {component.domain} |
+| **Type** | {component.type} |
+
+---
+
+## Guardians
+
+### Main Guardians (Primary Owners)
+| Name | Email | Role |
+|------|-------|------|
+| {guardian.name} | {guardian.email} | {guardian.role} |
+
+### Secondary Guardians (Backup/Contributors)
+| Name | Email | Role |
+|------|-------|------|
+| {guardian.name} | {guardian.email} | {guardian.role} |
+
+*Note: At least 1 main guardian is required. Secondary guardians are optional.*
+
+---
+
+## Technologies
+
+| Layer | Technology |
+|-------|------------|
+| Primary | {technologies.primary} |
+| Backend | {technologies.stack_details.backend} |
+| Frontend | {technologies.stack_details.frontend} |
+| Database | {technologies.stack_details.database} |
+| Messaging | {technologies.stack_details.messaging} |
+
+---
+
+## Ownership
+
+### Entities Owned
+
+| Entity | Description | Storage |
+|--------|-------------|---------|
+| {entity.name} | {entity.description} | {entity.storage} |
+
+### Business Rules
+
+- {business_rule_1}
+- {business_rule_2}
+
+---
+
+## APIs Exposed
+
+### REST Endpoints
+
+| Method | Path | Description |
+|--------|------|-------------|
+| {method} | {path} | {description} |
+
+### Other Protocols
+
+- **GraphQL:** {yes/no}
+- **gRPC:** {yes/no}
+
+---
+
+## Event Integration
+
+### Events Published
+
+| Event Name | Topic | Description |
+|------------|-------|-------------|
+| {event.name} | {event.topic} | {event.description} |
+
+### Events Consumed
+
+| Event Name | Topic | Description |
+|------------|-------|-------------|
+| {event.name} | {event.topic} | {event.description} |
+
+---
+
+## Dependencies
+
+### Outbound (This Component Calls)
+
+| Component | Type | Purpose |
+|-----------|------|---------|
+| {component} | {sync-api/async-event} | {purpose} |
+
+### Inbound (Other Components Call This)
+
+| Component | Type | Purpose |
+|-----------|------|---------|
+| {component} | {sync-api/async-event} | {purpose} |
+
+---
+
+## Trigger Phrases
+
+When a specification mentions any of these phrases, this component should be considered:
+
+- "{trigger_phrase_1}"
+- "{trigger_phrase_2}"
+- "{trigger_phrase_3}"
+
+---
+
+## Implementation Notes
+
+- {note_1}
+- {note_2}
+
+---
+
+## For Mixed-Technology Components
+
+### Backend Portion
+*Path: {backend.path}*
+
+{backend-specific details}
+
+### Frontend Portion
+*Path: {frontend.path}*
+
+{frontend-specific details}
+
+---
+
+*Generated: {timestamp}*
+*Source: Component Descriptor*

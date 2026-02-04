@@ -1,0 +1,228 @@
+# TECHNOLOGY-AGNOSTIC ARCHITECTURAL REASONING FRAMEWORK
+
+## Core Principle: Think in Business Capabilities, Not Technologies
+
+When analyzing any specification or feature request, reason at the **business domain** level first, then narrow to specific components. This approach works regardless of whether your system uses Java, Angular, TypeScript, Python, microservices, monoliths, or any hybrid architecture.
+
+---
+
+## DOMAIN MAP: Business Capabilities → Component Groups
+
+### [Order Management Domain]
+- **Business Responsibility:** Order lifecycle, pricing, fulfillment, returns
+- **Typical Components:** `order-service`, `fulfillment-service`, `pricing-engine`, `returns-processor`
+- **Owns Data Models:** Order, OrderLine, Shipment, Invoice, Return
+- **Owns Business Rules:** Pricing calculations, fulfillment rules, return policies
+- **Trigger Phrases:**
+  - "place order", "cancel order", "modify order"
+  - "calculate total", "apply discount", "price calculation"
+  - "ship item", "track shipment", "delivery status"
+  - "return request", "process return", "exchange"
+
+### [Customer & Identity Domain]
+- **Business Responsibility:** Customer data, authentication, profiles, organizational relationships
+- **Typical Components:** `customer-service`, `auth-service`, `profile-service`, `relationship-service`, `account-service`
+- **Owns Data Models:** Customer, User, Account, Organization, Profile, Role
+- **Owns Business Rules:** Authentication flows, profile management, access control, tier/loyalty logic
+- **Trigger Phrases:**
+  - "customer profile", "user login", "authentication"
+  - "manager approval", "access role", "permissions"
+  - "contact info", "address update", "preferences"
+  - "premium customer", "customer tier", "loyalty points"
+
+### [Frontend Experience Domain]
+- **Business Responsibility:** User interfaces, client-side logic, user interactions
+- **Typical Components:** `web-app`, `admin-portal`, `mobile-app`, `dashboard-ui`, `customer-portal`
+- **Owns UI Concerns:** Pages, components, client-side state, user experience
+- **Communication:** Consumes APIs, emits user events, manages client state
+- **Implementation:** Angular, React, Vue, mobile frameworks, or any UI technology
+- **Trigger Phrases:**
+  - "user interface", "display page", "show on screen"
+  - "interactive element", "form validation", "button click"
+  - "dashboard view", "portal", "admin panel"
+  - "responsive design", "mobile view", "widget"
+
+### [Integration & Event Domain]
+- **Business Responsibility:** Cross-component communication, notifications, system events
+- **Typical Components:** `notification-service`, `event-bus`, `message-router`, `audit-service`, `workflow-orchestrator`
+- **Owns Communication:** Message formats, event schemas, routing logic
+- **Communication Patterns:** Pub/sub, request/response, webhooks, event sourcing
+- **Trigger Phrases:**
+  - "send notification", "email", "SMS", "push notification"
+  - "publish event", "broadcast update", "trigger workflow"
+  - "log change", "audit trail", "track activity"
+  - "webhook callback", "integration", "sync data"
+
+### [Analytics & Reporting Domain]
+- **Business Responsibility:** Data aggregation, reporting, metrics, business intelligence
+- **Typical Components:** `analytics-engine`, `reporting-service`, `metrics-collector`, `dashboard-backend`
+- **Owns Data Models:** Report, Metric, Dashboard, Aggregation, KPI
+- **Owns Business Rules:** Calculation formulas, aggregation logic, data transformation
+- **Trigger Phrases:**
+  - "generate report", "track metrics", "data aggregation"
+  - "business intelligence", "KPI", "performance dashboard"
+  - "export data", "analytics", "statistics"
+  - "scheduled report", "real-time metrics"
+
+### [Transaction & Financial Domain]
+- **Business Responsibility:** Payment processing, billing, financial transactions, invoicing
+- **Typical Components:** `payment-service`, `billing-service`, `invoice-service`, `transaction-processor`
+- **Owns Data Models:** Payment, Transaction, Invoice, Bill, Refund
+- **Owns Business Rules:** Payment validation, billing cycles, refund policies
+- **Trigger Phrases:**
+  - "process payment", "charge card", "payment method"
+  - "generate invoice", "billing cycle", "subscription"
+  - "issue refund", "transaction history", "balance"
+
+### [Inventory & Catalog Domain]
+- **Business Responsibility:** Product catalog, inventory management, stock tracking
+- **Typical Components:** `catalog-service`, `inventory-service`, `product-service`, `stock-manager`
+- **Owns Data Models:** Product, Category, Inventory, Stock, SKU
+- **Owns Business Rules:** Stock calculations, availability rules, categorization
+- **Trigger Phrases:**
+  - "product details", "catalog", "category"
+  - "stock level", "inventory check", "availability"
+  - "out of stock", "restock", "reserve inventory"
+
+---
+
+## ARCHITECTURAL REASONING GUIDELINES
+
+### 1. Primary Data Ownership Rule
+**Question:** Which domain OWNS the core business entity/state being created or modified?
+- The owner is responsible for the entity's lifecycle (create, update, delete)
+- Other components may READ but should not directly WRITE
+- Example: "Update customer address" → Customer & Identity domain owns addresses
+
+### 2. Side Effect / Reaction Rule
+**Question:** Does the spec describe a reaction, notification, or follow-up action?
+- If yes, the **Integration & Event domain** is ALWAYS involved
+- Side effects are triggered by events from the primary domain
+- Example: "...and notify the manager" → notification component consumes an event
+
+### 3. User Interface Rule
+**Question:** Does the spec describe something a user sees or interacts with?
+- If yes, the **Frontend Experience domain** is involved
+- Consider which frontend application(s) need changes
+- Example: "Display warning on dashboard" → frontend app gets UI changes
+
+### 4. Lookup / Dependency Rule
+**Question:** Does a component need data it doesn't own?
+- If yes, you have a DEPENDENCY on another domain's component
+- Use API calls for synchronous needs, events for async notifications
+- Example: "Check customer tier before processing" → dependency on customer service
+
+### 5. Analytics Rule
+**Question:** Does the spec mention tracking, metrics, or reporting?
+- If yes, the **Analytics & Reporting domain** may be involved
+- Consider whether this is real-time display vs. background aggregation
+- Example: "Update success metrics" → analytics component tracks the metric
+
+---
+
+## CONFIDENCE SCORING
+
+| Level | Criteria | Action |
+|-------|----------|--------|
+| **HIGH** | Direct entity ownership + clear action within single domain | Proceed with hypothesis |
+| **MEDIUM** | Cross-domain collaboration, indirect involvement, or ambiguous ownership | Ask clarifying question OR run `/discover-component` |
+| **LOW** | Possible side effect, speculative, or unclear domain | MUST clarify before proceeding |
+
+---
+
+## COMPONENT IDENTIFICATION PATTERNS
+
+### Backend Services
+- Handle business logic, data persistence, complex computations
+- Examples: `order-service`, `payment-service`, `customer-service`
+- Technologies: Java/Spring, Node.js/Express, Python/FastAPI, Go, .NET
+
+### Frontend Applications
+- Handle user interaction, presentation logic, client-side state
+- Examples: `web-app`, `admin-portal`, `mobile-app`, `dashboard`
+- Technologies: Angular, React, Vue, React Native, Flutter
+
+### Shared Libraries
+- Provide reusable utilities, common models, cross-cutting concerns
+- Examples: `shared-models`, `common-utils`, `api-contracts`
+- Technologies: TypeScript libraries, Java libraries, npm packages
+
+### Integration Components
+- Route messages, transform data, coordinate workflows
+- Examples: `event-bus`, `api-gateway`, `message-router`
+- Technologies: Kafka, RabbitMQ, AWS EventBridge, API gateways
+
+### Mixed-Technology Components (Monorepos)
+- Contain multiple technology stacks in a single repository
+- May have backend + frontend, or multiple services
+- Examples: `admin-dashboard` (Java backend + Angular frontend)
+- **Analysis Approach:**
+  - Treat each technology portion as a sub-component
+  - Map both backend AND frontend portions to appropriate domains
+  - A single spec may affect multiple portions of the same component
+
+---
+
+## REGISTERED COMPONENTS
+
+Components are registered via the `/add-component` command. Each registered component has:
+- A dedicated rule file in `.cursor/rules/components/`
+- Trigger phrases that map specifications to components
+- API, event, and dependency information
+
+**To see registered components:** Check `.cursor/rules/components/_registry.mdc`
+
+**To add a new component:**
+1. In the component's project, run `/generate-component-descriptor`
+2. Copy the output
+3. In this project, run `/add-component` and paste the descriptor
+
+---
+
+## OUTPUT STANDARD
+
+When analyzing any specification, ALWAYS present hypotheses in this format:
+
+### 1. Targeted Components with Domain and Confidence
+```
+| Component | Domain | Confidence | Reasoning |
+|-----------|--------|------------|-----------|
+| order-service | Order Management | HIGH | Owns order entity |
+| merchant-portal | Frontend Experience | HIGH | "display on dashboard" |
+| notification-service | Integration | MEDIUM | "notify" action required |
+```
+
+### 2. Specific Questions to Confirm/Refine
+- Numbered list of clarifying questions
+- Each question should resolve an ambiguity or LOW/MEDIUM confidence
+
+### 3. Probable Change Types per Component
+- **Data Model:** New/modified entities, fields, relationships
+- **API:** New/modified endpoints or contracts
+- **UI:** New/modified pages, components, views
+- **Integration:** New/modified events, messages, webhooks
+- **Business Logic:** New/modified rules, calculations, workflows
+
+---
+
+## ANTI-PATTERNS TO AVOID
+
+1. **Technology Assumption:** Don't assume specific tech stack without verification
+2. **Single-Component Thinking:** Most features span multiple components
+3. **Skipping Frontend:** If users see it, frontend is involved
+4. **Skipping Integration:** If there's a notification/event, integration is involved
+5. **Direct Cross-Component DB Access:** Components should communicate via APIs/events
+6. **Premature Implementation:** Confirm components before diving into code
+
+---
+
+## QUICK REFERENCE: Common Scenarios
+
+| Scenario | Primary Domain | Supporting Domains |
+|----------|----------------|-------------------|
+| "Create new order" | Order Management | Customer (lookup), Inventory (reserve), Frontend (UI) |
+| "Send order confirmation" | Integration | Order (data source), Frontend (display) |
+| "Process refund" | Transaction/Financial | Order (return data), Integration (notify) |
+| "Display dashboard widget" | Frontend | Analytics (data), Backend (API) |
+| "Track user activity" | Analytics | Integration (events), Backend (source) |
+| "User login flow" | Customer & Identity | Frontend (UI), Integration (audit) |

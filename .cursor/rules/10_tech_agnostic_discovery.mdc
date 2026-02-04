@@ -1,0 +1,335 @@
+# TECHNOLOGY-AGNOSTIC COMPONENT DISCOVERY
+
+## Purpose
+Investigate the codebase to identify components handling specific business capabilities, regardless of the underlying technology (Java, Angular, Node.js, Python, etc.).
+
+---
+
+## COMMAND: /discover-component [business-context]
+
+### Overview
+Search the codebase to find components that handle specific business capabilities. This works across all technologies by focusing on business terms rather than technology-specific patterns.
+
+Use this when:
+- Confidence is MEDIUM or LOW
+- Multiple components could handle a capability
+- You need to verify assumptions before proceeding
+
+---
+
+## Discovery Patterns
+
+### 1. Find by Business Entity
+```
+/discover-component customer premium status
+```
+
+**Executes:**
+1. Search for terms: "premium", "customer", "tier", "status" in code and configs
+2. Look for component names: `*customer*`, `*tier*`, `*account*`
+3. Search data models, interfaces, schemas across all technologies
+4. Check configuration files, environment variables
+
+**Example Output:**
+```
+DISCOVERY RESULTS: customer premium status
+
+Found in Backend Services:
+├── customer-service/
+│   └── src/.../models/CustomerTier.java
+│       Fields: tierId, tierName (GOLD, SILVER, BRONZE), benefits
+│   └── src/.../api/CustomerController.java
+│       Endpoint: GET /customers/{id}/tier
+│
+├── billing-service/
+│   └── src/.../models/Subscription.ts
+│       Contains: premiumFeatures, tierLevel
+
+Found in Shared Libraries:
+├── shared-models/
+│   └── src/customer/CustomerTier.interface.ts
+│       Defines: Tier enum, CustomerTierDTO
+
+OBSERVATION: Customer tier is owned by customer-service.
+billing-service references it but doesn't own it.
+```
+
+---
+
+### 2. Find by User Interface
+```
+/discover-component agent dashboard
+```
+
+**Executes:**
+1. Search frontend projects for: `*dashboard*`, `*agent*`
+2. Look for route definitions: `/agent/*`, `/dashboard/*`
+3. Check Angular modules, React components, Vue views
+4. Search for component names in any UI framework
+
+**Example Output:**
+```
+DISCOVERY RESULTS: agent dashboard
+
+Found Frontend Applications:
+├── agent-portal/ (Angular)
+│   └── src/app/modules/dashboard/
+│       └── dashboard.module.ts
+│       └── components/
+│           ├── ticket-dashboard.component.ts
+│           └── alert-panel.component.ts
+│   └── Routes: /dashboard, /dashboard/tickets
+│
+├── admin-portal/ (React)
+│   └── src/pages/AgentDashboard/
+│       └── AgentDashboard.tsx
+│       └── components/
+│           └── AgentStatsWidget.tsx
+
+Found Backend APIs:
+├── support-service/
+│   └── API: GET /api/dashboard/agent-stats
+
+OBSERVATION: Two separate dashboard implementations exist.
+agent-portal (Angular) is the primary agent-facing app.
+admin-portal (React) has agent views for administrators.
+```
+
+---
+
+### 3. Find by Integration Point
+```
+/discover-component notify ticket created
+```
+
+**Executes:**
+1. Search for: "event", "publish", "notify", "listener", "handler"
+2. Look for message schemas, event definitions
+3. Find configuration: message queues, event buses, webhooks
+4. Check across all backend services and integration components
+
+**Example Output:**
+```
+DISCOVERY RESULTS: notify ticket created
+
+Found Event Definitions:
+├── shared-models/
+│   └── src/events/TicketEvents.ts
+│       Defines: TicketCreatedEvent, TicketUpdatedEvent
+│
+├── event-schemas/
+│   └── ticket-events.avro
+│       Schema: TicketCreatedEvent with fields
+
+Found Publishers:
+├── support-service/
+│   └── src/services/TicketService.java
+│       Publishes: TicketCreatedEvent to 'tickets.created' topic
+
+Found Consumers:
+├── notification-service/
+│   └── src/handlers/TicketEventHandler.ts
+│       Consumes: TicketCreatedEvent
+│       Actions: Sends email notification
+
+Found Configuration:
+├── infrastructure/kafka/topics.yaml
+│   └── Topic: 'tickets.created' (partitions: 3)
+
+OBSERVATION: Event-driven pattern in use.
+support-service publishes, notification-service consumes.
+Events use shared schema definitions.
+```
+
+---
+
+### 4. Find by Data Model
+```
+/discover-component support ticket model
+```
+
+**Executes:**
+1. Search for: "ticket", "support", "issue" in model definitions
+2. Look for: interface, class, type, schema, entity definitions
+3. Check database migrations, ORM models, API contracts
+4. Search across all languages and frameworks
+
+**Example Output:**
+```
+DISCOVERY RESULTS: support ticket model
+
+Found Data Models:
+├── support-service/ (Java/Spring)
+│   └── src/main/java/models/SupportTicket.java
+│       @Entity @Table(name = "support_tickets")
+│       Fields: id, customerId, subject, status, priority, createdAt
+│
+├── shared-models/ (TypeScript)
+│   └── src/support/SupportTicket.interface.ts
+│       Interface with matching fields
+│
+├── agent-portal/ (Angular)
+│   └── src/app/models/ticket.model.ts
+│       Client-side model (subset of fields)
+
+Found Database:
+├── support-service/migrations/
+│   └── V001__create_support_tickets.sql
+│       Table: support_tickets
+
+Found API Contracts:
+├── api-specs/support-api.yaml
+│   └── Schema: SupportTicketDTO
+
+OBSERVATION: support-service owns the ticket entity.
+Shared model exists for cross-service contracts.
+Frontend has local model for UI needs.
+```
+
+---
+
+### 5. Find by API Endpoint
+```
+/discover-component transaction alert API
+```
+
+**Executes:**
+1. Search for route definitions, controller methods
+2. Look for OpenAPI/Swagger specs
+3. Check REST endpoints, GraphQL resolvers
+4. Search across all backend services
+
+**Example Output:**
+```
+DISCOVERY RESULTS: transaction alert API
+
+Found API Endpoints:
+├── transaction-monitoring-service/
+│   └── src/controllers/AlertController.java
+│       POST /api/alerts - Create alert
+│       GET /api/alerts/{id} - Get alert
+│       GET /api/alerts/high-value - List high-value alerts
+│
+├── api-gateway/
+│   └── routes/transaction-alerts.yaml
+│       Forwards to: transaction-monitoring-service
+
+Found API Specs:
+├── api-specs/alerts-api.yaml
+│   └── Paths defined with request/response schemas
+
+Found Consumers (Frontend):
+├── merchant-portal/
+│   └── src/app/services/alert.service.ts
+│       Calls: GET /api/alerts/high-value
+
+OBSERVATION: transaction-monitoring-service owns alert APIs.
+merchant-portal consumes these APIs.
+```
+
+---
+
+### 6. Find by Configuration/Feature
+```
+/discover-component feature flag premium
+```
+
+**Executes:**
+1. Search for feature flag definitions
+2. Look for configuration files, environment variables
+3. Check for feature management services
+
+**Example Output:**
+```
+DISCOVERY RESULTS: feature flag premium
+
+Found Feature Configurations:
+├── config-service/
+│   └── features/premium-features.yaml
+│       Flags: PREMIUM_DASHBOARD_ENABLED, PREMIUM_REPORTS_ENABLED
+│
+├── web-app/
+│   └── src/environments/feature-flags.ts
+│       Client-side feature flags
+
+Found Usage:
+├── customer-service/
+│   └── src/services/FeatureService.java
+│       Checks: isPremiumFeatureEnabled(customerId, feature)
+
+OBSERVATION: Feature flags managed in config-service.
+Components check flags via FeatureService.
+```
+
+---
+
+## AUTO-DISCOVERY RULE
+
+When the Architectural Analysis produces a hypothesis with **LOW** or **MEDIUM** confidence:
+
+```
+AUTOMATIC SUGGESTION:
+"Confidence for [component] is [MEDIUM/LOW]. 
+Would you like me to run `/discover-component [business-context]` to investigate?"
+
+Suggested discoveries based on domain:
+- Customer & Identity: `/discover-component customer [entity]`
+- Frontend Experience: `/discover-component [app-name] [feature]`
+- Integration & Event: `/discover-component event [entity] [action]`
+- Analytics: `/discover-component metrics [entity]`
+```
+
+---
+
+## DISCOVERY OUTPUT FORMAT
+
+All discovery results should follow this structure:
+
+```markdown
+## DISCOVERY: [business-context]
+
+### Found Components
+[List of components organized by type: Backend, Frontend, Shared, Integration]
+
+### Key Observations
+1. [What was found that confirms hypothesis]
+2. [What was found that contradicts hypothesis]
+3. [What was NOT found that was expected]
+
+### Technology Notes
+- [Relevant tech stack observations]
+- [Integration patterns observed]
+
+### Recommended Actions
+- [ ] [Action based on findings]
+- [ ] [Another action]
+
+### Updated Confidence
+| Component | Previous | Updated | Reason |
+|-----------|----------|---------|--------|
+| xxx-service | MEDIUM | HIGH | Found matching API |
+```
+
+---
+
+## SEARCH PATTERNS REFERENCE
+
+| Goal | Search Terms | Look In |
+|------|--------------|---------|
+| Find Business Entity | Entity name, related terms | Models, interfaces, schemas |
+| Find UI Component | Feature name, page name | Frontend apps, components |
+| Find API | Action verb, entity | Controllers, routes, specs |
+| Find Event | "event", entity, action | Event handlers, publishers |
+| Find Configuration | Feature name, setting | Config files, env vars |
+| Find Integration | "notify", "publish", "send" | Services, handlers, queues |
+
+## TECHNOLOGY-SPECIFIC HINTS
+
+| Technology | Where to Look |
+|------------|---------------|
+| **Java/Spring** | `@Controller`, `@Service`, `@Entity`, `@Component` |
+| **Node.js/Express** | `router.`, `app.get/post`, model files |
+| **Angular** | `*.component.ts`, `*.service.ts`, `*.module.ts` |
+| **React** | `*.tsx`, hooks, context providers |
+| **Python/FastAPI** | `@app.route`, Pydantic models, SQLAlchemy |
+| **Event Systems** | Topics, queues, handlers, listeners |

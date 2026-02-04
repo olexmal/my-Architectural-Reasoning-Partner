@@ -1,0 +1,97 @@
+# Component Registry
+
+> This file tracks all registered components in the Architectural Reasoning Partner.
+> Components are added via the `/add-component` command.
+
+---
+
+## How to Add Components
+
+1. In the target component's project, run `/generate-component-descriptor`
+2. Copy the generated YAML output
+3. In this project, run `/add-component` and paste the YAML
+4. The component will be added to this registry and a rule file will be created
+
+---
+
+## Registered Components
+
+| Component | Domain | Type | Technologies | Main Guardian(s) | File | Last Updated |
+|-----------|--------|------|--------------|------------------|------|--------------|
+| *(none registered yet)* | - | - | - | - | - | - |
+
+---
+
+## Components by Domain
+
+### Order Management
+*(No components registered)*
+
+### Customer & Identity
+*(No components registered)*
+
+### Transaction & Financial
+*(No components registered)*
+
+### Frontend Experience
+*(No components registered)*
+
+### Integration & Events
+*(No components registered)*
+
+### Analytics & Reporting
+*(No components registered)*
+
+### Inventory & Catalog
+*(No components registered)*
+
+### Other
+*(No components registered)*
+
+---
+
+## Components by Technology
+
+### Java/Spring
+*(No components registered)*
+
+### Node.js
+*(No components registered)*
+
+### Python
+*(No components registered)*
+
+### Angular
+*(No components registered)*
+
+### React
+*(No components registered)*
+
+### Mixed/Monorepo
+*(No components registered)*
+
+---
+
+## Quick Reference: Trigger Phrases
+
+This section is auto-updated when components are added. It maps trigger phrases to components for quick lookup during architectural analysis.
+
+```
+# Format: "phrase" → component-name
+
+# (No trigger phrases registered yet)
+```
+
+---
+
+## Statistics
+
+- **Total Components:** 0
+- **Backend Services:** 0
+- **Frontend Apps:** 0
+- **Shared Libraries:** 0
+- **Mixed/Monorepo:** 0
+
+---
+
+*Last updated: (not yet updated)*
